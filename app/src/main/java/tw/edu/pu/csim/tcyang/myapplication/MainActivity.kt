@@ -25,6 +25,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.foundation.clickable
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.foundation.gestures.detectTapGestures
+
 
 
 class MainActivity : ComponentActivity() {
@@ -67,15 +70,30 @@ fun Dice(modifier: Modifier = Modifier) {
             text = "請點擊圖片隨機丟骰子\n作者：寺崎七緒"
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         Image(
             painter = painterResource(id = diceImages[diceNumber]),
             contentDescription = "Dice",
             modifier = Modifier
-                .clickable {
-                    diceNumber = (1..6).random()
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onTap = {
+                            // 單擊：產生 1 到 6 的隨機整數
+                            diceNumber = (1..6).random()
+                        },
+                        onDoubleTap = {
+                            // 雙擊：重置為 0 (回到 dice0)
+                            diceNumber = 0
+                        },
+                        onLongPress = {
+                            // 長按：點數變成 6
+                            diceNumber = 6
+                        }
+
+                    )
                 }
+
         )
     }
 }
